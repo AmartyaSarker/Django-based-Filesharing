@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Description" content="Simple files sharing webapp between PC/Laptop/Computer and Phone">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<head>
+    <title>File Sharing Webapp</title>
+    <style>
+        body{
+            background-color: rgba(0, 0, 0, .9);
+            margin-top: 8%;
+            margin-left: 5%;
+            text-shadow: 0 0 2px limegreen;
+            color: #1ff042;
+            font-family: 'AndaleMono', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.15em;
+        }
+        .btn {
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            background-color: black;
+            color:limegreen;
+            margin-right: 5%;
+            display: block;
+
+        }
+        button:hover{
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: anime .4s infinite;
+        }
+        a {
+            text-decoration:none;
+        }
+
+        @keyframes anime{
+            0% {
+                transform: translate(10px, 2px) rotate(0deg);
+            }
+            10% {
+                transform: translate(10px, -2px) rotate(-1deg);
+            }
+            20% {
+                transform: translate(10px, -2px) rotate(1deg);
+            }
+            30%{
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+            40% {
+                transform: translate(1px, 2px) rotate(2deg);
+            }
+            50%{
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+            60%{
+                transform: translate(1px, -2px) rotate(1deg);
+            }
+            70%{
+                transform: translate(-1px, 2px) rotate(-2deg);
+            }
+            80%{
+                transform: translate(-1px, 0px) rotate(0deg);
+            }
+            90%{
+                transform: translate(0px, -2px) rotate(1deg);
+            }
+            100%{
+                transform: translate(-1px, -2px) rotate(0deg);
+            }
+        }
+        #progressbar {
+        	display: none;
+        	border: 2px solid gray;
+        	max-width:94%;
+        	width: 43%;
+        }
+    </style>
+</head>
+<div class="group">
+<h1>Upload Files</h1>
+<label class="btn" for="fileuploader">Select File</label>
+<input id="fileuploader" type="file" hidden/>
+<br><br>
+
+<div id="filesViewer">
+</div>
+<div id="progressbar"></div>
+<br>
+<button id="submit" class="btn" style="float: right;">Upload</button>
+</div>
+
+
+
+<div class="group">
+<h1>Download Files</h1>
+{% for file in dfiles %}
+    <a class="btn" href="download?link={{ file }}">{{ file }}</a>
+{% endfor %}
+</div>
+<script>
+	const nofile_selected = '<p id="nofile" class="btn" >No file Selected</p>';
+	const fileuploader = document.querySelector('#fileuploader');
+	const filesViewer = document.querySelector('#filesViewer');
+	const uploadbtn = document.querySelector('#submit');
+    var formdata = new FormData();
+    function nofile(){
+        filesViewer.innerHTML = nofile_selected;
+    }
+    nofile();
+	fileuploader.addEventListener('change', function(){
+		var nofile = document.querySelector('#nofile');
+		if(nofile){
+			nofile.remove();
+		}
+		var p = document.createElement('p');
+		p.textContent = fileuploader.files[0].name;
+		p.setAttribute('class', 'btn');
+		filesViewer.append(p);
+        formdata.append('file[]', fileuploader.files[0]);
+	})
+
+
+    uploadbtn.addEventListener('click', function(){
+        nofile();
+    	const progressbar = document.querySelector('#progressbar');
+        formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        var ajax = new XMLHttpRequest();
+        ajax.open('POST', 'upload/', true);
+        progressbar.style.display = "block";
+
+        ajax.upload.addEventListener('load', function(){
+            progressbar.style.width = "100%"
+            setTimeout(function(){
+                nofile();
+            	progressbar.style.display = "none";
+            	progressbar.style.width = "43%"
+            }, 1000)
+
+
+        })
+        ajax.send(formdata);
+        formdata = new FormData();
+    })
+
+</script>
+
+</html>
