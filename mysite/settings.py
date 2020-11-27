@@ -25,7 +25,8 @@ SECRET_KEY = 'l3(^o&c*^al35rawuk8l@zqq$#nbs5^yys20#o&omloq_fyif#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.100']
+# Append your ip_address here
+ALLOWED_HOSTS = []
 
 
 # Application definition
