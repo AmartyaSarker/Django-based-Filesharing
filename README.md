@@ -4,7 +4,7 @@ A django based file sharing webapp via local_network(pc/computer/laptop/phone)
 
 
 # Dependencies
-<b> Python</b>
+<b> Python</b><br/>
 <b> Django </b>
 
 # How to use
