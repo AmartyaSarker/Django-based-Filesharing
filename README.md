@@ -2,6 +2,11 @@
 
 A django based file sharing webapp via local_network(pc/computer/laptop/phone)
 
+
+# Dependencies
+<b> Python</b>
+<b> Django </b>
+
 # How to use
 
 <b>i)</b>  Go to the <b>main.py</b> file, change the <b>ip_address</b> to your ip_address <br/>
